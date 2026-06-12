@@ -120,9 +120,16 @@ const static QString indexPage = "index.php/";
 /// The redirect_uri reuses the github.io OAuth callback page
 /// (getWasmOAuthRedirectUri); the app's Authorization Callback Domain in Strava
 /// settings must be maximumtrainer.github.io. Scope is activity:write (upload).
+///
+/// The Worker is deployed to the project Cloudflare account by CI
+/// (deploy-strava-proxy.yml), which also installs the STRAVA_CLIENT_SECRET
+/// repository secret — same setup as the intervals proxy.  (Releases built
+/// before this change point at the retired personal-account deployment
+/// mt-strava-token.maximumtrainer.workers.dev, which must stay alive until
+/// those releases age out.)
 const static QString CLIENT_ID_STRAVA = QStringLiteral("7252");
 const static QString STRAVA_TOKEN_PROXY_BASE =
-    QStringLiteral("https://mt-strava-token.maximumtrainer.workers.dev");
+    QStringLiteral("https://mt-strava-token.intervals-login.workers.dev");
 const static QString URL_TOKEN_STRAVA = STRAVA_TOKEN_PROXY_BASE + "/strava/oauth/token";
 
 

@@ -33,12 +33,25 @@ can't be used as a public relay for the secret.
 
 ## Deploy
 
+**Preferred: CI.** The `deploy-strava-proxy.yml` workflow deploys to the
+project Cloudflare account on every push to master that touches this
+directory (or via *Run workflow*).  It installs the worker secret from the
+`STRAVA_CLIENT_SECRET` GitHub repository secret and then verifies the
+deployment end-to-end: a bogus code must come back from Strava as **HTTP 400**
+(credentials accepted, code rejected) — a 401 means the installed secret is
+wrong, `worker_misconfigured` means it is missing.
+
+Manual deploy (e.g. to a personal account for testing):
+
 ```bash
 cd workers/strava-token-proxy
 npx wrangler login          # once
-npx wrangler deploy
+npx wrangler deploy --config wrangler.toml
 npx wrangler secret put STRAVA_CLIENT_SECRET   # paste the (rotated) Strava secret
 ```
+
+(`--config` pinned because wrangler v4 can otherwise resolve the repo-root
+`wrangler.jsonc` — the docs static site — and deploy that instead.)
 
 `STRAVA_CLIENT_ID` is a non-secret var in `wrangler.toml` (7252) and can stay
 there. **Never** put `STRAVA_CLIENT_SECRET` in `wrangler.toml` or commit it.
